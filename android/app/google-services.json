@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "318692928601",
+    "project_id": "student-central-3161f",
+    "storage_bucket": "student-central-3161f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:318692928601:android:9aa80408f2a4c2f0ae1548",
+        "android_client_info": {
+          "package_name": "com.studentcentral.kquizon.student_central"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyb4kCA9taK-fEguzk03O7rnQgxEdjanY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
