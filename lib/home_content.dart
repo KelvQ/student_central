@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:student_central/chat.dart';
 import 'package:student_central/planner.dart';
-import 'package:student_central/progress.dart';
+import 'package:student_central/schedule.dart';
 import 'package:student_central/study.dart';
 
 class HomePage extends StatelessWidget {
@@ -36,7 +36,7 @@ class HomeContent extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ProgressPage()),
+                MaterialPageRoute(builder: (context) => SchedulePage()),
               );
             },
             gradient: const LinearGradient(
