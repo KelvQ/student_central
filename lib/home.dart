@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:student_central/progress.dart';
 import 'home_content.dart';
-import 'alerts.dart';
 import 'account.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,8 +15,7 @@ class _HomePageState extends State<HomePage> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeContent(),
-    // SearchPage(),
-    const AlertsPage(),
+    const ProgressPage(),
     const ProfilePage(),
   ];
 
@@ -53,8 +52,8 @@ class _HomePageState extends State<HomePage> {
           //   label: 'Search',
           // ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Alerts',
+            icon: Icon(Icons.assessment),
+            label: 'Progress',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

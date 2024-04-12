@@ -25,9 +25,6 @@ class _ProgressPageState extends State<ProgressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Progress'),
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

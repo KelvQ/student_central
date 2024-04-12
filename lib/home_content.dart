@@ -31,8 +31,8 @@ class HomeContent extends StatelessWidget {
         crossAxisSpacing: 20,
         children: <Widget>[
           SquareButton(
-            icon: Icons.assessment,
-            label: 'Progress',
+            icon: Icons.schedule,
+            label: 'Schedule',
             onPressed: () {
               Navigator.push(
                 context,
