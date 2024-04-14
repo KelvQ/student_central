@@ -230,14 +230,26 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
             Text('Start Time'),
             ElevatedButton(
               onPressed: () => _selectStartTime(context),
-              child: Text('Select Time'),
+              style: ElevatedButton.styleFrom(
+                side: const BorderSide(color: Colors.black, width: 1),
+              ),
+              child: const Text(
+                  'Select Time',
+                  style: TextStyle(color: Colors.black),
+              ),
             ),
             Text('Selected Start Time: $_selectedStartTime'),
             SizedBox(height: 20.0),
             Text('End Time'),
             ElevatedButton(
               onPressed: () => _selectEndTime(context),
-              child: Text('Select Time'),
+              style: ElevatedButton.styleFrom(
+                side: const BorderSide(color: Colors.black, width: 1),
+              ),
+              child: const Text(
+                  'Select Time',
+                   style: TextStyle(color: Colors.black),
+              ),
             ),
             Text('Selected End Time: $_selectedEndTime'),
             SizedBox(height: 20.0),
@@ -291,7 +303,13 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
                   Navigator.pop(context, classInfo);
                 }
               },
-              child: Text('Save'),
+              style: ElevatedButton.styleFrom(
+                side: const BorderSide(color: Colors.black, width: 1),
+              ),
+              child: Text(
+                  'Save',
+                  style: TextStyle(color: Colors.black),
+              ),
             ),
           ],
         ),

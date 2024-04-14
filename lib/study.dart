@@ -98,14 +98,26 @@ class _PomodoroScreenState extends State<PomodoroScreen> {
                       startTimer();
                     }
                   },
-                  child: Text(isRunning ? 'Pause' : 'Start'),
+                  style: ElevatedButton.styleFrom(
+                    side: const BorderSide(color: Colors.black, width: 1),
+                  ),
+                  child: Text(
+                      isRunning ? 'Pause' : 'Start',
+                      style: TextStyle(color: Colors.black),
+                  ),
                 ),
                 const SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () {
                     restartTimer();
                   },
-                  child: const Text('Restart'),
+                  style: ElevatedButton.styleFrom(
+                    side: const BorderSide(color: Colors.black, width: 1),
+                  ),
+                  child: const Text(
+                    'Restart',
+                    style: TextStyle(color: Colors.black),
+                  ),
                 ),
               ],
             ),

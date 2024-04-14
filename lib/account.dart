@@ -63,7 +63,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         MaterialPageRoute(builder: (context) => const EditProfilePage()),
                       );
                     },
-                    child: const Text('Edit Profile'),
+                    style: ElevatedButton.styleFrom(
+                      side: const BorderSide(color: Colors.black, width: 1),
+                    ),
+                    child: const Text(
+                        'Edit Profile',
+                        style: TextStyle(color: Colors.black),
+                    ),
                   ),
                   SizedBox(height: 10),
                   OutlinedButton(
@@ -74,7 +80,10 @@ class _ProfilePageState extends State<ProfilePage> {
                         MaterialPageRoute(builder: (context) => const MyHomePage(title: 'Student Central')),
                       );
                     },
-                    child: const Text('Log Out'),
+                    child: const Text(
+                        'Log Out',
+                        style: TextStyle(color: Colors.black),
+                    ),
                   ),
                 ],
               ),
