@@ -11,15 +11,15 @@ class ProgressPage extends StatefulWidget {
 
 class _ProgressPageState extends State<ProgressPage> {
   late User _user;
-  int _completedTasksCount = 0;
-  int _totalMinutesStudied = 0;
+  late Future<int> _completedTasksCount;
+  late Future<int> _totalMinutesStudied;
 
   @override
   void initState() {
     super.initState();
     _user = FirebaseAuth.instance.currentUser!;
-    _loadCompletedTasksCount();
-    _loadTotalMinutesStudied();
+    _completedTasksCount = _loadCompletedTasksCount();
+    _totalMinutesStudied = _loadTotalMinutesStudied();
   }
 
   @override
@@ -35,46 +35,68 @@ class _ProgressPageState extends State<ProgressPage> {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 20),
-            Card(
-              elevation: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Tasks Completed:',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            FutureBuilder<int>(
+              future: _completedTasksCount,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Card(
+                    elevation: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Total Tasks Completed:',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '${snapshot.data}',
+                            style: TextStyle(fontSize: 24, color: Colors.blue),
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      '$_completedTasksCount',
-                      style: TextStyle(fontSize: 24, color: Colors.blue),
-                    ),
-                  ],
-                ),
-              ),
+                  );
+                }
+              },
             ),
             SizedBox(height: 20),
-            Card(
-              elevation: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Total Time Studied:',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            FutureBuilder<int>(
+              future: _totalMinutesStudied,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Card(
+                    elevation: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Total Time Studied:',
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '${_formatTotalTimeStudied(snapshot.data!)}',
+                            style: TextStyle(fontSize: 24, color: Colors.blue),
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 10),
-                    Text(
-                      '${_formatTotalTimeStudied()}',
-                      style: TextStyle(fontSize: 24, color: Colors.blue),
-                    ),
-                  ],
-                ),
-              ),
+                  );
+                }
+              },
             ),
           ],
         ),
@@ -82,51 +104,37 @@ class _ProgressPageState extends State<ProgressPage> {
     );
   }
 
-  void _loadCompletedTasksCount() {
-    FirebaseFirestore.instance
+  Future<int> _loadCompletedTasksCount() async {
+    var docSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(_user.uid)
         .collection('completed_tasks_count')
         .doc('count')
-        .get()
-        .then((docSnapshot) {
-      if (docSnapshot.exists) {
-        setState(() {
-          _completedTasksCount = docSnapshot.data()?['count'] ?? 0;
-        });
-      } else {
-        // Handle if count document doesn't exist
-        print('Count document does not exist');
-      }
-    }).catchError((error) {
-      print('Error loading completed tasks count: $error');
-    });
+        .get();
+    if (docSnapshot.exists) {
+      return docSnapshot.data()?['count'] ?? 0;
+    } else {
+      throw 'Count document does not exist';
+    }
   }
 
-  void _loadTotalMinutesStudied() {
-    FirebaseFirestore.instance
+  Future<int> _loadTotalMinutesStudied() async {
+    var docSnapshot = await FirebaseFirestore.instance
         .collection('users')
         .doc(_user.uid)
         .collection('timerState')
         .doc('state')
-        .get()
-        .then((docSnapshot) {
-      if (docSnapshot.exists) {
-        setState(() {
-          _totalMinutesStudied = docSnapshot.data()?['totalMinutes'] ?? 0;
-        });
-      } else {
-        // Handle if timer state document doesn't exist
-        print('Timer state document does not exist');
-      }
-    }).catchError((error) {
-      print('Error loading total minutes studied: $error');
-    });
+        .get();
+    if (docSnapshot.exists) {
+      return docSnapshot.data()?['totalMinutes'] ?? 0;
+    } else {
+      throw 'Timer state document does not exist';
+    }
   }
 
-  String _formatTotalTimeStudied() {
-    int hours = _totalMinutesStudied ~/ 60;
-    int minutes = _totalMinutesStudied % 60;
+  String _formatTotalTimeStudied(int totalMinutes) {
+    int hours = totalMinutes ~/ 60;
+    int minutes = totalMinutes % 60;
     return '${hours}h ${minutes}m';
   }
 }
