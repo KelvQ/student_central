@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SchedulePage extends StatefulWidget {
   @override
@@ -6,7 +8,13 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _SchedulePageState extends State<SchedulePage> {
-  List<ClassInfo> classInfoList = [];
+  late List<ClassInfo> classInfoList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadClassInfoList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +82,7 @@ class _SchedulePageState extends State<SchedulePage> {
     if (result != null && result is ClassInfo) {
       setState(() {
         classInfoList.add(result);
+        _saveClassInfo(result);
       });
     }
   }
@@ -97,6 +106,7 @@ class _SchedulePageState extends State<SchedulePage> {
               onPressed: () {
                 setState(() {
                   classInfoList.remove(classInfo);
+                  _deleteClassInfo(classInfo);
                 });
                 Navigator.of(context).pop();
               },
@@ -130,6 +140,49 @@ class _SchedulePageState extends State<SchedulePage> {
       default:
         return '';
     }
+  }
+
+  void _loadClassInfoList() {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('schedule')
+        .get()
+        .then((querySnapshot) {
+      setState(() {
+        classInfoList = querySnapshot.docs.map((doc) => ClassInfo.fromDocumentSnapshot(doc)).toList();
+      });
+    }).catchError((error) {
+      print('Error loading class info list: $error');
+    });
+  }
+
+  void _saveClassInfo(ClassInfo classInfo) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('schedule')
+        .add(classInfo.toMap()) // Convert ClassInfo to Map
+        .then((value) {
+      print('Class info saved successfully');
+      classInfo.id = value.id;
+    }).catchError((error) {
+      print('Error saving class info: $error');
+    });
+  }
+
+  void _deleteClassInfo(ClassInfo classInfo) {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('schedule')
+        .doc(classInfo.id)
+        .delete()
+        .then((value) {
+      print('Class info deleted successfully');
+    }).catchError((error) {
+      print('Error deleting class info: $error');
+    });
   }
 }
 
@@ -258,6 +311,7 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
 }
 
 class ClassInfo {
+  String? id;
   final String eventName;
   final String startTime;
   final String endTime;
@@ -268,5 +322,25 @@ class ClassInfo {
     required this.startTime,
     required this.endTime,
     required this.selectedDays,
+    this.id,
   });
+
+  factory ClassInfo.fromDocumentSnapshot(DocumentSnapshot doc) {
+    return ClassInfo(
+      id: doc.id,
+      eventName: doc['eventName'],
+      startTime: doc['startTime'],
+      endTime: doc['endTime'],
+      selectedDays: List<bool>.from(doc['selectedDays']),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'eventName': eventName,
+      'startTime': startTime,
+      'endTime': endTime,
+      'selectedDays': selectedDays,
+    };
+  }
 }
