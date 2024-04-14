@@ -94,7 +94,7 @@ class _SchedulePageState extends State<SchedulePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Delete Confirmation'),
-          content: Text('Are you sure you want to delete the class "${classInfo.eventName}" for all days?'),
+          content: Text('Are you sure you want to delete the event "${classInfo.eventName}" for all days?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -270,16 +270,26 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
             SizedBox(height: 20.0),
             ElevatedButton(
               onPressed: () {
-                // Handle saving schedule data
-                ClassInfo classInfo = ClassInfo(
-                  eventName: _eventNameController.text,
-                  startTime: _selectedStartTime,
-                  endTime: _selectedEndTime,
-                  selectedDays: _selectedDays,
-                );
+                if (_eventNameController.text.isEmpty) {
+                  _showErrorDialog('Please enter event name');
+                } else if (_selectedStartTime.isEmpty) {
+                  _showErrorDialog('Please select start time');
+                } else if (_selectedEndTime.isEmpty) {
+                  _showErrorDialog('Please select end time');
+                } else if (!_selectedDays.contains(true)) {
+                  _showErrorDialog('Please select at least one day');
+                } else {
+                  // Handle saving schedule data
+                  ClassInfo classInfo = ClassInfo(
+                    eventName: _eventNameController.text,
+                    startTime: _selectedStartTime,
+                    endTime: _selectedEndTime,
+                    selectedDays: _selectedDays,
+                  );
 
-                // Return classInfo back to the schedule page
-                Navigator.pop(context, classInfo);
+                  // Return classInfo back to the schedule page
+                  Navigator.pop(context, classInfo);
+                }
               },
               child: Text('Save'),
             ),
@@ -314,7 +324,28 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
       });
     }
   }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
 
 class ClassInfo {
   String? id;
