@@ -94,7 +94,7 @@ class _SchedulePageState extends State<SchedulePage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Delete Confirmation'),
-          content: Text('Are you sure you want to delete the event "${classInfo.eventName}" for all days?'),
+          content: Text('Are you sure you want to delete the class "${classInfo.eventName}" for all days?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
@@ -205,6 +205,8 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
     'Saturday',
     'Sunday'
   ];
+  String _selectedStartTime = '';
+  String _selectedEndTime = '';
 
   @override
   Widget build(BuildContext context) {
@@ -228,14 +230,16 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
             Text('Start Time'),
             ElevatedButton(
               onPressed: () => _selectStartTime(context),
-              child: Text(_startTime.format(context)),
+              child: Text('Select Time'),
             ),
+            Text('Selected Start Time: $_selectedStartTime'),
             SizedBox(height: 20.0),
             Text('End Time'),
             ElevatedButton(
               onPressed: () => _selectEndTime(context),
-              child: Text(_endTime.format(context)),
+              child: Text('Select Time'),
             ),
+            Text('Selected End Time: $_selectedEndTime'),
             SizedBox(height: 20.0),
             Text('Select Days'),
             Column(
@@ -269,8 +273,8 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
                 // Handle saving schedule data
                 ClassInfo classInfo = ClassInfo(
                   eventName: _eventNameController.text,
-                  startTime: _startTime.format(context),
-                  endTime: _endTime.format(context),
+                  startTime: _selectedStartTime,
+                  endTime: _selectedEndTime,
                   selectedDays: _selectedDays,
                 );
 
@@ -293,6 +297,7 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
     if (picked != null && picked != _startTime) {
       setState(() {
         _startTime = picked;
+        _selectedStartTime = picked.format(context);
       });
     }
   }
@@ -305,6 +310,7 @@ class _ScheduleInputPageState extends State<ScheduleInputPage> {
     if (picked != null && picked != _endTime) {
       setState(() {
         _endTime = picked;
+        _selectedEndTime = picked.format(context);
       });
     }
   }
