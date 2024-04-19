@@ -65,6 +65,8 @@ class _PlannerPageState extends State<PlannerPage> {
                             _updateTodoItem(todoItem);
                             if (todoItem.isCompleted) {
                               _updateCompletedTasksCount(1); // Increment count by 1 if task is completed
+                            } else {
+                              _updateCompletedTasksCount(-1); // Decrement count by 1 if task is unchecked
                             }
                           });
                         },

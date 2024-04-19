@@ -40,6 +40,8 @@ dependencies:
   cloud_firestore: ^4.15.8
   firebase_database: ^10.4.11
   flutter_launcher_icons: ^0.13.1
+  dash_chat_2: ^0.0.20
+  chat_gpt_sdk: ^3.0.4
 
 dev_dependencies:
   flutter_test:

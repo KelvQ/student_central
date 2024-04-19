@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Main Page'),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch(
