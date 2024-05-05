@@ -29,8 +29,16 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Student Central'),
+        title: Text(
+          'Student Central',
+          style: TextStyle(
+            fontFamily: 'DancingScript', // Use the Dancing Script font
+            fontSize: 24,
+            // You can adjust other properties like fontWeight, color, etc. here
+          ),
+        ),
         automaticallyImplyLeading: false,
+        centerTitle: true,
       ),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),

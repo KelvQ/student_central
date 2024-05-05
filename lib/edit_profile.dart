@@ -26,7 +26,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _loadProfile() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      DocumentSnapshot userData = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      DocumentSnapshot userData =
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
       setState(() {
         _firstName = userData['firstName'];
         _lastName = userData['lastName'];
@@ -66,13 +67,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 },
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _saveFirstName();
-                },
-                child: const Text('Save First Name'),
-              ),
-              const SizedBox(height: 20),
               const Text(
                 'Last Name',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -92,9 +86,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  _saveLastName();
+                  _saveNames();
                 },
-                child: const Text('Save Last Name'),
+                child: const Text('Save'),
               ),
             ],
           ),
@@ -103,35 +97,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
-  void _saveFirstName() {
+  void _saveNames() {
     String firstName = _firstNameController.text;
-
-    FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser?.uid)
-        .update({
-      'firstName': firstName,
-    }).then((value) {
-      print('First name updated successfully');
-      Navigator.pop(context);
-    }).catchError((error) {
-      print('Error updating first name: $error');
-    });
-  }
-
-  void _saveLastName() {
     String lastName = _lastNameController.text;
 
     FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .update({
+      'firstName': firstName,
       'lastName': lastName,
     }).then((value) {
-      print('Last name updated successfully');
+      print('Names updated successfully');
       Navigator.pop(context);
     }).catchError((error) {
-      print('Error updating last name: $error');
+      print('Error updating names: $error');
     });
   }
 
